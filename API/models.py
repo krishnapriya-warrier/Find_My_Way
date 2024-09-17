@@ -27,6 +27,9 @@ class Applications(models.Model):
         return f'{self.Applicant.username}" applied for {self.Job.Role}'
     
 class Save_My_Job(models.Model):
-    Job = models.ForeignKey(Jobs,on_delete=models.CASCADE)
-    Applicant = models.ForeignKey(User,on_delete=models.CASCADE)
+    Job = models.ForeignKey(Jobs,on_delete=models.CASCADE, related_name='saved_by_users')
+    Applicant = models.ForeignKey(User,on_delete=models.CASCADE,related_name='saved_jobs')
     Date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.Applicant.username} saved {self.Job.Role}'

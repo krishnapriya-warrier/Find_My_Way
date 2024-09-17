@@ -9,6 +9,7 @@ from API.serializers import JobsSerializer,ApplicationsSerializer,SaveMyJobSeria
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from API.models import Jobs,Applications,Save_My_Job
+from rest_framework.decorators import action
 
 class JobsView(ModelViewSet):
     serializer_class = JobsSerializer
@@ -37,10 +38,20 @@ class SaveMyJobView(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(Applicant=self.request.user)
 
+    @action(methods=["POST"],detail=True)
+    def add_to_saved_jobs(self,request,*args,**kw):
+        id = kw.get('pk')
+        applicant = request.User
+        job = Jobs.objects.get(id=id)
+        Save_My_Job.objects.create(Job=job,Applicant=applicant)
+        return Response(data="Job successfully added to Saved Jobs")
+
 class UserView(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
+
 
 

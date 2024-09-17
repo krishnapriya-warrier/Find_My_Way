@@ -3,6 +3,7 @@ from API.models import Jobs,Applications,Save_My_Job
 from django.contrib.auth.models import User
 
 class JobsSerializer(serializers.ModelSerializer):
+
     Created_by = serializers.PrimaryKeyRelatedField(read_only=True) 
     Created_at = serializers.DateTimeField(read_only=True)
     Updated_at = serializers.DateTimeField(read_only=True)
@@ -19,8 +20,9 @@ class ApplicationsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class SaveMyJobSerializer(serializers.ModelSerializer):
-    Job = serializers.PrimaryKeyRelatedField(read_only = True)
-    Applicant = serializers.PrimaryKeyRelatedField(read_only = True)
+    
+    Job = serializers.PrimaryKeyRelatedField(queryset=Jobs.objects.all())
+    Applicant = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     Date = serializers.DateTimeField(read_only = True)
    
     class Meta:
